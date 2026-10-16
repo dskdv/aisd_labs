@@ -1,0 +1,29 @@
+# Папки сборки
+build/
+Debug/
+Release/
+x64/
+x86/
+.vs/
+.vscode/
+.idea/
+
+# Скомпилированные файлы
+*.exe
+*.obj
+*.o
+*.pdb
+*.ilk
+*.out
+*.gch
+*.pch
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Файлы IDE
+*.user
+*.suo
