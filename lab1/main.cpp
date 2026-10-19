@@ -95,7 +95,7 @@ public:
 		}
 		return *this;
 	}
-public:
+
 	//оператор += - аналог метода push(value)
 	Stack& operator+=(const T& value) {
 		if (_size >= _capacity) {
@@ -104,6 +104,34 @@ public:
 		_data[_size] = value;
 		_size++;
 		return *this;
+	}
+	//оператор -=   -  аналог метода pop(),
+	Stack& operator-=(const T& value) {
+		if (empty()) {
+			throw std::out_of_range("Стек пуст");
+		}
+		_size--;
+		return *this;
+	}
+	//методы top(), size(), empty();
+	T& top() {
+		if (empty()) {
+			throw std::out_of_range("Стек пуст");
+		}
+		return _data[_size - 1];
+	}
+	const T& top() const{
+		if (empty()) {
+			throw std::out_of_range("Стек пуст");
+		}
+		return _data[_size - 1];
+	}
+
+	int size() const {
+		return _size;
+	}
+	bool empty() const {
+		return _size == 0;
 	}
 };
 
