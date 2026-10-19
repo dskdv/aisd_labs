@@ -95,6 +95,16 @@ public:
 		}
 		return *this;
 	}
+public:
+	//оператор += - аналог метода push(value)
+	Stack& operator+=(const T& value) {
+		if (_size >= _capacity) {
+			resize();
+		}
+		_data[_size] = value;
+		_size++;
+		return *this;
+	}
 };
 
 int main(){}
