@@ -26,7 +26,7 @@ public:
 	//конструктор по умолчанию - пустой стек;
 	Stack() : _data(nullptr), _size(0), _capacity(0) {}
 
-	//конструктор с параметром
+	//конструктор копирования
 	Stack(const Stack& other) : _capacity(other._capacity), _size(other._size) {
 		if (_size > 0) {
 			_data = new T[_size];
@@ -39,7 +39,43 @@ public:
 		}
 	}
 
+	//конструктор с параметром: заполнение стека случайными значениями
+	Stack(size_t count, T minVal, T maxVal) : _size(count), _capacity(count) {
+		_data = new T[_size];
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		if constexpr (std::is_integral_v<T> && !std::is_same_v<T, char>) {
+			std::uniform_int_distribution<T> dist(minVal, maxVal);
+			for (size_t i = 0;i < _size; ++i) {
+				_data[i] = dist(gen);
+			}
+		}
+
+		else if constexpr (std::is_same_v<T, char>) {
+			std::uniform_int_distribution<int> dist((int)minVal, (int)maxVal);
+			for (size_t i = 0; i < _size; ++i) {
+				_data[i] = (char)dist(gen);
+			}
+		}
+
+		else if constexpr (std::is_floating_point_v<T>) {
+			std::uniform_real_distribution<T> dist(minVal, maxVal);
+			for (size_t i = 0; i < _size; ++i) {
+				_data[i] = dist(gen);
+			}
+		}
+
+		else {
+			for (size_t i = 0; i < _size; ++i) {
+				_data[i] = minVal;
+			}
+		}
+	}
+
 	~Stack() {
 		delete[] _data;
 	}
 };
+
+int main(){}
