@@ -133,6 +133,29 @@ public:
 	bool empty() const {
 		return _size == 0;
 	}
+
+	bool operator==(const Stack& other) const {
+		if (_size != other._size) {
+			return false;
+		}
+		for (int i = 0; i < _size; ++i) {
+			if (_data[i] != other._data[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	bool operator!=(const Stack& other) const {
+		return !(*this == other);
+	}
+	friend std::ostream& operator<<(std::ostream& os, const Stack& other) {
+		os << "[ ";
+		for (int i = 0; i < other._size; ++i) {
+			os << other._data[i] << " ";
+		}
+		os << "]";
+		return os;
+	}
 };
 
 int main(){}
