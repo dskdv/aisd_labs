@@ -76,6 +76,25 @@ public:
 	~Stack() {
 		delete[] _data;
 	}
+
+	Stack& operator=(const Stack& other) {
+		if (this == &other) {
+			return *this;
+		}
+		delete[] _data;
+		_size = other._size;
+		_capacity = other._capacity;
+		if (_size > 0) {
+			_data = new T[_size];
+		}
+		else {
+			_data = new T[1];
+		}
+		for (size_t i = 0; i < _size; ++i) {
+			_data[i] = other._data[i];
+		}
+		return *this;
+	}
 };
 
 int main(){}
