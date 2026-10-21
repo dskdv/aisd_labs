@@ -108,7 +108,7 @@ public:
 	//оператор -=   -  аналог метода pop(),
 	Stack& operator-=(const T& value) {
 		if (empty()) {
-			throw std::out_of_range("Стек пуст");
+			throw std::out_of_range("Stack is empty");
 		}
 		_size--;
 		return *this;
@@ -116,13 +116,13 @@ public:
 	//методы top(), size(), empty();
 	T& top() {
 		if (empty()) {
-			throw std::out_of_range("Стек пуст");
+			throw std::out_of_range("Stack is empty");
 		}
 		return _data[_size - 1];
 	}
 	const T& top() const{
 		if (empty()) {
-			throw std::out_of_range("Стек пуст");
+			throw std::out_of_range("Stack is empty");
 		}
 		return _data[_size - 1];
 	}
@@ -158,4 +158,96 @@ public:
 	}
 };
 
-int main(){}
+int main() {
+	//конструктор по умолчанию
+	std::cout << std::boolalpha;
+	std::cout << "1. default constructor\n";
+	Stack<int> s1;
+	std::cout << "s1:" << s1 << "\n";
+	std::cout << "s1.empty() = " << s1.empty() << "\n";
+	std::cout << "s1.size()  = " << s1.size() << "\n\n";
+
+	//оператор += 
+	std::cout << "2. operator +=\n";
+	s1 += 10;
+	s1 += 20;
+	s1 += 30;
+	std::cout << "after +=: " << s1<< "\n";
+	std::cout << "s1.size() = " << s1.size() << "\n\n";
+
+	//метод top()
+	std::cout << "3. top()\n";
+	std::cout << "s1.top() = " << s1.top() << "\n";
+	s1.top() = 99;
+	std::cout << "s1.top() = 99: " << s1.top() << "\n\n";
+
+	const Stack<int>& cs1 = s1;
+	std::cout << "cs1.top() (const) = " << cs1.top() << "\n\n";
+
+	//оператор -=
+	std::cout << "4. operator -=\n";
+	s1 -= 0;
+	std::cout << "after -=: " << s1 << "\n\n";
+
+	//конструктор с параметрами (случайное заполнение)
+	std::cout << "5. random constructor\n";
+
+	Stack<int> sInt(5, 1, 100);
+	std::cout << "Stack<int>(5, 1, 100): " << sInt << "\n";
+
+	Stack<float> sFloat(5, -1.0f, 1.0f);
+	std::cout << "Stack<float>(5, -1.0, 1.0): " << sFloat << "\n";
+
+	Stack<double> sDouble(4, 0.0, 1.0);
+	std::cout << "Stack<double>(4, 0.0, 1.0): " << sDouble << "\n";
+
+	Stack<char> sChar(6, 'a', 'z');
+	std::cout << "Stack<char>(6, 'a', 'z): " << sChar << "\n";
+
+	Stack<std::string> sString(3, std::string("Apple"), std::string("Samara"));
+	std::cout << "Stack<std::string(3, std::string(\"Apple\"), std::string(\"Samara\")): " << sString << "\n\n";
+
+	//конструктор копирование
+	std::cout << "6. copy constructor\n";
+	Stack<int> sCopy(sInt);
+	std::cout << "sCopy(sInt): " << sCopy << "\n\n";
+
+	//оператор =
+	std::cout << "7. operator =\n";
+	Stack<int> sAs;
+	sAs = sInt;
+	std::cout << "sAssign = sInt: " << sAs << "\n";
+	sAs = sAs;
+	std::cout << "after self-assignment: " << sAs << "\n\n";
+
+	//оператор == и !=
+	std::cout << "8. operator == and !=\n";
+	Stack<int> a(3, 5, 5);
+	Stack<int> b(3, 5, 5);
+	Stack<int> c(4, 5, 5);
+	std::cout << "a = " << a << "\n";
+	std::cout << "b = " << b << "\n";
+	std::cout << "c = " << c << "\n";
+	std::cout << "a == b ? " << (a == b) << "\n";
+	std::cout << "a != b ? " << (a != b) << "\n";
+	std::cout << "a == c ? " << (a == c) << "\n";
+	std::cout << "a != c ? " << (a != c) << "\n\n";
+
+	//исключения
+	std::cout << "9. exceptions\n";
+	Stack<int> emptyS;
+	try {
+		emptyS.top();
+	}
+	catch (const std::out_of_range& e) {
+		std::cout << "Caught on top(): " << e.what() << "\n";
+	}
+	try {
+		emptyS -= 0;
+	}
+	catch (const std::out_of_range& e) {
+		std::cout << "Caught on pop(): " << e.what() << "\n";
+	}
+
+
+	}
