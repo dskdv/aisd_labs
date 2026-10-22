@@ -106,7 +106,7 @@ public:
 		return *this;
 	}
 	//оператор -=   -  аналог метода pop(),
-	Stack& operator-=(const T& value) {
+	Stack& operator-=(const T&) {
 		if (empty()) {
 			throw std::out_of_range("Stack is empty");
 		}
@@ -127,7 +127,7 @@ public:
 		return _data[_size - 1];
 	}
 
-	int size() const {
+	size_t size() const {
 		return _size;
 	}
 	bool empty() const {
