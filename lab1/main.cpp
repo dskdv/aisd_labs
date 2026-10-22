@@ -158,6 +158,30 @@ public:
 	}
 };
 
+//Перевести неотрицательное целое число из десятичной системы в систему с основанием k (2 ≤ k ≤ 16).
+std::string converter(unsigned int number, int base) {
+	if (base < 2 || base > 16) {
+		throw std::invalid_argument("Base must be beween 2 and 16");
+	}
+	if (number == 0) {
+		return "0";
+	}
+	Stack<char> s;
+	const char digits[] = "0123456789ABCDEF";
+
+	while (number > 0) {
+		int current = number % base;
+		s += digits[current];
+		number = number / base;
+	}
+	std::string result = "";
+	while (!s.empty()) {
+		result += s.top();
+		s -= ' ';
+	}
+	return result;
+}
+
 int main() {
 	//конструктор по умолчанию
 	std::cout << std::boolalpha;
@@ -248,6 +272,5 @@ int main() {
 	catch (const std::out_of_range& e) {
 		std::cout << "Caught on pop(): " << e.what() << "\n";
 	}
-
 
 	}
