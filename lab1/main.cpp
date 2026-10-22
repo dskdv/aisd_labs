@@ -15,7 +15,7 @@ private:
 			_capacity *= 2;
 		}
 		T* newData = new T[_capacity];
-		for (int i = 0; i < _size; ++i) {
+		for (size_t i = 0; i < _size; ++i) {
 			newData[i] = _data[i];
 		}
 		delete[] _data;
