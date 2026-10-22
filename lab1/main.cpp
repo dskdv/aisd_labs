@@ -270,7 +270,15 @@ int main() {
 		emptyS -= 0;
 	}
 	catch (const std::out_of_range& e) {
-		std::cout << "Caught on pop(): " << e.what() << "\n";
+		std::cout << "Caught on pop(): " << e.what() << "\n\n";
 	}
 
+	//Перевод числа 
+	std::cout << "10. Number base conversion\n";
+	unsigned int num = 255;
+	std::cout << "Number: " << num << "\n";
+	std::cout << "Base 2: " << converter(num, 2) << "\n";
+	std::cout << "Base 4: " << converter(num, 4) << "\n";
+	std::cout << "Base 16: " << converter(num, 16) << "\n";
+	std::cout << "Test for 0: " << converter(0, 2) << "\n\n";
 	}
