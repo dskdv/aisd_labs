@@ -109,4 +109,36 @@ public:
 		}
 		_size++;
 	}
+	// Оператор присваивания
+	LinkedList& operator=(const LinkedList& other) {
+		if (this == &other) {
+			return *this;
+		}
+		while (_size > 0) {
+			pop_head();
+		}
+		copyFrom(other);
+		return *this;
+	}
+	// Удаление элемента из начала
+	void pop_head() {
+		if (head == nullptr) {
+			throw std::out_of_range("List is empty");
+		}
+		if (_size == 1) {
+			delete head;
+			head = nullptr;
+		}
+		else {
+			Node<T>* tail = head->prev;
+			Node<T>* newHead = head->next;
+
+			tail->next = newHead;
+			newHead->prev = tail;
+
+			delete head;
+			head = newHead;
+		}
+		_size--;
+	}
 };
