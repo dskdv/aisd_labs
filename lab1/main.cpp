@@ -23,18 +23,20 @@ private:
 	}
 
 public:
+	static constexpr double EPSILON = 1e-9;
+
 	//конструктор по умолчанию - пустой стек;
 	Stack() : _data(nullptr), _size(0), _capacity(0) {}
 
 	//конструктор копирования
 	Stack(const Stack& other) : _capacity(other._capacity), _size(other._size) {
 		if (_size > 0) {
-			_data = new T[_size];
+			_data = new T[_capacity];
 		}
 		else {
 			_data = new T[1];
 		}
-		for (int i = 0; i < other._size; ++i) {
+		for (size_t i = 0; i < other._size; ++i) {
 			_data[i] = other._data[i];
 		}
 	}
@@ -85,7 +87,7 @@ public:
 		_size = other._size;
 		_capacity = other._capacity;
 		if (_size > 0) {
-			_data = new T[_size];
+			_data = new T[_capacity];
 		}
 		else {
 			_data = new T[1];
@@ -139,18 +141,26 @@ public:
 			return false;
 		}
 		for (size_t i = 0; i < _size; ++i) {
-			if (_data[i] != other._data[i]) {
-				return false;
+			if constexpr (std::is_arithmetic_v<T>) {
+				if (std::abs(_data[i] - other._data[i]) > EPSILON) {
+					return false;
+				}
 			}
-		}
-		return true;
-	}
+			else{
+				if(!(_data[i] == other._data[i])) {
+				return false;
+			    }
+		    }
+	    }
+	return true;
+    }
+
 	bool operator!=(const Stack& other) const {
 		return !(*this == other);
 	}
 	friend std::ostream& operator<<(std::ostream& os, const Stack& other) {
 		os << "[ ";
-		for (int i = 0; i < other._size; ++i) {
+		for (size_t i = 0; i < other._size; ++i) {
 			os << other._data[i] << " ";
 		}
 		os << "]";
@@ -275,10 +285,22 @@ int main() {
 
 	//Перевод числа 
 	std::cout << "10. Number base conversion\n";
-	unsigned int num = 255;
+	unsigned int num = 8;
 	std::cout << "Number: " << num << "\n";
 	std::cout << "Base 2: " << converter(num, 2) << "\n";
 	std::cout << "Base 4: " << converter(num, 4) << "\n";
 	std::cout << "Base 16: " << converter(num, 16) << "\n";
 	std::cout << "Test for 0: " << converter(0, 2) << "\n\n";
-	}
+
+	Stack<float> f1;
+	Stack<float> f2;
+
+	f1 += (0.1f + 0.2f);
+	f2 += 0.3f;
+	std::cout << "f1(0.1+0.2)" << f1 << "\n";
+	std::cout << "f2(0.3)";
+	std::cout << "f1 == f2 ? " << (f1 == f2) << "\n";
+
+
+	return 0;
+}
