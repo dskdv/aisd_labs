@@ -109,6 +109,15 @@ public:
 		}
 		_size++;
 	}
+	// Добавление другого списка в конец
+	void push_tail(const LinkedList& other) {
+		if (other.head == nullptr) return;
+		Node<T>* otherCurrent = other.head;
+		do {
+			push_tail(otherCurrent->data);
+			otherCurrent = otherCurrent->next;
+		} while (otherCurrent != other.head);
+	}
 	// Оператор присваивания
 	LinkedList& operator=(const LinkedList& other) {
 		if (this == &other) {
