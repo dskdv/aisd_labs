@@ -35,4 +35,78 @@ private:
 		head->prev = current;
 		_size = other._size;
 	}
+public:
+	// Конструктор по умолчанию
+	LinkedList() : head(nullptr), _size(0) {}
+
+	// Конструктор копирования
+	LinkedList(const LinkedList& other) : head(nullptr), _size(0) {
+		copyFrom(other);
+	}
+
+	// Конструктор с параметрами: заполнение случайными значениями
+	LinkedList(size_t count, T minVal, T maxVal) : head(nullptr), _size(0) {
+		if (count == 0) {
+			return;
+		}
+
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		if constexpr (std::is_integral_v<T> && !std::is_same_v<T, char>) {
+			std::uniform_int_distribution<T> dist(minVal, maxVal);
+			for (size_t i = 0; i < count; ++i) {
+				push_tail(dist(gen));
+			}
+		}
+		else if constexpr (std::is_same_v<T, char>) {
+			std::uniform_int_distribution<int> dist((int)minVal, (int)maxVal);
+			for (size_t i = 0; i < count; ++i) {
+				push_tail((char)dist(gen));
+			}
+		}
+		else if constexpr (std::is_floating_point_v<T>) {
+			std::uniform_real_distribution<T> dist(minVal, maxVal);
+			for (size_t i = 0; i < count; ++i) {
+				push_tail(dist(gen));
+			}
+		}
+		else {
+			for (size_t i = 0; i < count; ++i) {
+				push_tail(minVal);
+			}
+		}
+	}
+	// Деструктор
+	~LinkedList() {
+		if (head == nullptr) {
+			return;
+		}
+
+		Node<T>* current = head->next;
+		while (current != head) {
+			Node<T>* temp = current;
+			current = current->next;
+			delete temp;
+		}
+		delete head;
+	}
+
+	// Добавление элемента в конец
+	void push_tail(const T& value) {
+		Node<T>* newNode = new Node<T>(value);
+		if (head == nullptr) {
+			head = newNode;
+			head->next = head;
+			head->prev = head;
+		}
+		else {
+			Node<T>* tail = head->prev;
+			tail->next = newNode;
+			newNode->prev = tail;
+			newNode->next = head;
+			head->prev = newNode;
+		}
+		_size++;
+	}
 };
