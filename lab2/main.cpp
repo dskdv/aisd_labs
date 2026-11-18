@@ -92,6 +92,18 @@ public:
 		delete head;
 	}
 
+	// Оператор присваивания
+	LinkedList& operator=(const LinkedList& other) {
+		if (this == &other) {
+			return *this;
+		}
+		while (_size > 0) {
+			pop_head();
+		}
+		copyFrom(other);
+		return *this;
+	}
+
 	// Добавление элемента в конец
 	void push_tail(const T& value) {
 		Node<T>* newNode = new Node<T>(value);
@@ -118,17 +130,23 @@ public:
 			otherCurrent = otherCurrent->next;
 		} while (otherCurrent != other.head);
 	}
-	// Оператор присваивания
-	LinkedList& operator=(const LinkedList& other) {
-		if (this == &other) {
-			return *this;
-		}
-		while (_size > 0) {
-			pop_head();
-		}
-		copyFrom(other);
-		return *this;
+
+	// Добавление элемента в начало
+	void push_head(const T& value) {
+		push_tail(value);
+		head = head->prev; // Сдвигаем указатель head на новый элемент
 	}
+
+	// Добавление другого списка в начало
+	void push_head(const LinkedList& other) {
+		if (other.head == nullptr) return;
+		Node<T>* otherCurrent = other.head->prev;
+		do {
+			push_head(otherCurrent->data);
+			otherCurrent = otherCurrent->prev;
+		} while (otherCurrent != other.head->prev);
+	}
+
 	// Удаление элемента из начала
 	void pop_head() {
 		if (head == nullptr) {
