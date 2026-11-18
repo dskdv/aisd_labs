@@ -168,4 +168,48 @@ public:
 		}
 		_size--;
 	}
+
+	// Удаление элемента из начала
+	void pop_head() {
+		if (head == nullptr) {
+			throw std::out_of_range("List is empty");
+		}
+		if (_size == 1) {
+			delete head;
+			head = nullptr;
+		}
+		else {
+			Node<T>* tail = head->prev;
+			Node<T>* newHead = head->next;
+
+			tail->next = newHead;
+			newHead->prev = tail;
+
+			delete head;
+			head = newHead;
+		}
+		_size--;
+	}
+
+	// Удаление элемента из конца
+	void pop_tail() {
+		if (head == nullptr) {
+			throw std::out_of_range("List is empty");
+		}
+		if (_size == 1) {
+			delete head;
+			head = nullptr;
+		}
+		else {
+			Node<T>* tail = head->prev;
+			Node<T>* newTail = tail->prev;
+
+			newTail->next = head;
+			head->prev = newTail;
+
+			delete tail;
+		}
+		_size--;
+	}
+
 };
