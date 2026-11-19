@@ -128,7 +128,7 @@ public:
 	}
 	// Добавление другого списка в конец
 	void push_tail(const LinkedList& other) {
-		if (other.head == nullptr) return;   // ← добавьте эту строку
+		if (other.head == nullptr) return;
 		size_t count = other._size;
 		Node<T>* other_current = other.head;
 		for (size_t i = 0; i < count; ++i) {
@@ -285,8 +285,169 @@ template <typename T>
 void reverse_list(LinkedList<T>& list) {
 	LinkedList<T> reversed;
 	while (!list.empty()) {
-		reversed.push_head(list[0])
+		reversed.push_head(list[0]);
 		list.pop_head();
 	}
 	list = reversed;
+}
+
+int main() {
+	std::cout << std::boolalpha;
+
+	// 1. Конструктор по умолчанию
+	std::cout << "1. default constructor\n";
+	LinkedList<int> l1;
+	std::cout << "l1: " << l1 << "\n";
+	std::cout << "l1.empty() = " << l1.empty() << "\n";
+	std::cout << "l1.size()  = " << l1.size() << "\n\n";
+
+	// 2. push_tail(value)
+	std::cout << "2. push_tail(value)\n";
+	l1.push_tail(10);
+	l1.push_tail(20);
+	l1.push_tail(30);
+	std::cout << "after push_tail: " << l1 << "\n";
+	std::cout << "l1.size() = " << l1.size() << "\n\n";
+
+	// 3. push_head(value)
+	std::cout << "3. push_head(value)\n";
+	l1.push_head(5);
+	l1.push_head(1);
+	std::cout << "after push_head: " << l1 << "\n\n";
+
+	// 4. operator[]
+	std::cout << "4. operator[]\n";
+	std::cout << "l1[0] = " << l1[0] << "\n";
+	std::cout << "l1[2] = " << l1[2] << "\n";
+	std::cout << "l1[5] (5 % 5 = 0) = " << l1[5] << "\n";
+	std::cout << "l1[7] (7 % 5 = 2) = " << l1[7] << "\n";
+	l1[1] = 99;
+	std::cout << "after l1[1] = 99: " << l1 << "\n\n";
+
+	// 5. pop_head()
+	std::cout << "5. pop_head()\n";
+	l1.pop_head();
+	std::cout << "after pop_head: " << l1 << "\n";
+	std::cout << "l1.size() = " << l1.size() << "\n\n";
+
+	// 6. pop_tail()
+	std::cout << "6. pop_tail()\n";
+	l1.pop_tail();
+	std::cout << "after pop_tail: " << l1 << "\n";
+	std::cout << "l1.size() = " << l1.size() << "\n\n";
+
+	// 7. delete_node(value)
+	std::cout << "7. delete_node(value)\n";
+	LinkedList<int> l_del(6, 7, 7);
+	std::cout << "before delete_node(7): " << l_del << "\n";
+	l_del.delete_node(7);
+	std::cout << "after delete_node(7): " << l_del << "\n";
+	std::cout << "l_del.size() = " << l_del.size() << "\n\n";
+
+	// 8. Конструктор с параметрами (случайное заполнение)
+	std::cout << "8. random constructor\n";
+	LinkedList<int> l_int(5, 1, 100);
+	std::cout << "LinkedList<int>(5, 1, 100): " << l_int << "\n";
+
+	LinkedList<float> l_float(5, -1.0f, 1.0f);
+	std::cout << "LinkedList<float>(5, -1.0, 1.0): " << l_float << "\n";
+
+	LinkedList<double> l_double(4, 0.0, 1.0);
+	std::cout << "LinkedList<double>(4, 0.0, 1.0): " << l_double << "\n";
+
+	LinkedList<char> l_char(6, 'a', 'z');
+	std::cout << "LinkedList<char>(6, 'a', 'z'): " << l_char << "\n";
+
+	LinkedList<std::string> l_string(3, std::string("Apple"), std::string("Samara"));
+	std::cout << "LinkedList<std::string>(3, \"Apple\", \"Samara\"): " << l_string << "\n\n";
+
+	// 9. Конструктор копирования
+	std::cout << "9. copy constructor\n";
+	LinkedList<int> l_copy(l_int);
+	std::cout << "l_copy(l_int): " << l_copy << "\n\n";
+
+	// 10. Оператор присваивания
+	std::cout << "10. operator=\n";
+	LinkedList<int> l_as;
+	l_as = l_int;
+	std::cout << "l_as = l_int: " << l_as << "\n";
+	l_as = l_as;
+	std::cout << "after self-assignment: " << l_as << "\n\n";
+
+	// 11. push_tail(LinkedList)
+	std::cout << "11. push_tail(LinkedList)\n";
+	LinkedList<int> l_a;
+	l_a.push_tail(1);
+	l_a.push_tail(2);
+	LinkedList<int> l_b;
+	l_b.push_tail(3);
+	l_b.push_tail(4);
+	std::cout << "l_a: " << l_a << "\n";
+	std::cout << "l_b: " << l_b << "\n";
+	l_a.push_tail(l_b);
+	std::cout << "l_a.push_tail(l_b): " << l_a << "\n\n";
+
+	// 12. push_head(LinkedList)
+	std::cout << "12. push_head(LinkedList)\n";
+	LinkedList<int> l_c;
+	l_c.push_tail(1);
+	l_c.push_tail(2);
+	LinkedList<int> l_d;
+	l_d.push_tail(3);
+	l_d.push_tail(4);
+	std::cout << "l_c: " << l_c << "\n";
+	std::cout << "l_d: " << l_d << "\n";
+	l_c.push_head(l_d);
+	std::cout << "l_c.push_head(l_d): " << l_c << "\n\n";
+
+	// 13. Самодобавление списка в себя
+	std::cout << "13. self push_tail\n";
+	LinkedList<int> l_self;
+	l_self.push_tail(1);
+	l_self.push_tail(2);
+	l_self.push_tail(3);
+	std::cout << "before: " << l_self << "\n";
+	l_self.push_tail(l_self);
+	std::cout << "after l_self.push_tail(l_self): " << l_self << "\n\n";
+
+	// 14. Практическая задача: reverse_list
+	std::cout << "14. reverse_list\n";
+	LinkedList<int> l_rev;
+	l_rev.push_tail(1);
+	l_rev.push_tail(2);
+	l_rev.push_tail(3);
+	l_rev.push_tail(4);
+	l_rev.push_tail(5);
+	std::cout << "before reverse: " << l_rev << "\n";
+	reverse_list(l_rev);
+	std::cout << "after reverse:  " << l_rev << "\n\n";
+
+	// 15. Исключения
+	std::cout << "15. exceptions\n";
+	LinkedList<int> empty_l;
+	try {
+		empty_l.pop_head();
+	}
+	catch (const std::out_of_range& e) {
+		std::cout << "Caught on pop_head(): " << e.what() << "\n";
+	}
+	try {
+		empty_l.pop_tail();
+	}
+	catch (const std::out_of_range& e) {
+		std::cout << "Caught on pop_tail(): " << e.what() << "\n";
+	}
+	try {
+		int val = empty_l[0];
+		std::cout << val;
+	}
+	catch (const std::out_of_range& e) {
+		std::cout << "Caught on operator[]: " << e.what() << "\n";
+	}
+	try {
+		LinkedList<int> bad(5, 10, 1);
+	}
+	catch (const std::invalid_argument& e) {
+		std::cout << "Caught on random constructor: " << e.what() << "\n";
+	}
 }
