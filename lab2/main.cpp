@@ -128,7 +128,7 @@ public:
 	}
 	// Добавление другого списка в конец
 	void push_tail(const LinkedList& other) {
-		// Размер запоминаем заранее, чтобы работало и при добавлении списка самого в себя
+		if (other.head == nullptr) return;   // ← добавьте эту строку
 		size_t count = other._size;
 		Node<T>* other_current = other.head;
 		for (size_t i = 0; i < count; ++i) {
@@ -280,3 +280,13 @@ public:
 		return _size == 0;
 	}
 };
+// Задача. Элементы по одному переносятся в новый список с конца в начало
+template <typename T>
+void reverse_list(LinkedList<T>& list) {
+	LinkedList<T> reversed;
+	while (!list.empty()) {
+		reversed.push_head(list[0]);
+		list.pop_head();
+	}
+	list = reversed;
+}
