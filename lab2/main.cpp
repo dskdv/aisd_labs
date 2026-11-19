@@ -6,6 +6,7 @@ struct Node {
 	Node* next;
 	Node* prev;
 
+	// Создание узла с заданным значением
 	Node(const T& value) : data(value), next(nullptr), prev(nullptr) {}
 };
 
@@ -15,7 +16,8 @@ private:
 	Node<T>* head = nullptr;
 	size_t _size = 0;
 
-	void copyFrom(const LinkedList& other) {
+	// Копирование всех узлов из другого списка (вспомогательный метод)
+	void copy_from(const LinkedList& other) {
 		if (other.head == nullptr) {
 			head = nullptr;
 			_size = 0;
@@ -23,13 +25,13 @@ private:
 		}
 		head = new Node<T>(other.head->data);
 		Node<T>* current = head;
-		Node<T>* otherCurrent = other.head->next;
-		while (otherCurrent != other.head) {
-			Node<T>* newNode = new Node<T>(otherCurrent->data);
-			current->next = newNode;
-			newNode->prev = current;
-			current = newNode;
-			otherCurrent = otherCurrent->next;
+		Node<T>* other_current = other.head->next;
+		while (other_current != other.head) {
+			Node<T>* new_node = new Node<T>(other_current->data);
+			current->next = new_node;
+			new_node->prev = current;
+			current = new_node;
+			other_current = other_current->next;
 		}
 		current->next = head;
 		head->prev = current;
@@ -41,11 +43,14 @@ public:
 
 	// Конструктор копирования
 	LinkedList(const LinkedList& other) : head(nullptr), _size(0) {
-		copyFrom(other);
+		copy_from(other);
 	}
 
 	// Конструктор с параметрами: заполнение случайными значениями
-	LinkedList(size_t count, T minVal, T maxVal) : head(nullptr), _size(0) {
+	LinkedList(size_t count, T min_val, T max_val) : head(nullptr), _size(0) {
+		if (min_val > max_val) {
+			throw std::invalid_argument("min_val must not be greater than max_val");
+		}
 		if (count == 0) {
 			return;
 		}
@@ -54,26 +59,26 @@ public:
 		std::mt19937 gen(rd());
 
 		if constexpr (std::is_integral_v<T> && !std::is_same_v<T, char>) {
-			std::uniform_int_distribution<T> dist(minVal, maxVal);
+			std::uniform_int_distribution<T> dist(min_val, max_val);
 			for (size_t i = 0; i < count; ++i) {
 				push_tail(dist(gen));
 			}
 		}
 		else if constexpr (std::is_same_v<T, char>) {
-			std::uniform_int_distribution<int> dist((int)minVal, (int)maxVal);
+			std::uniform_int_distribution<int> dist((int)min_val, (int)max_val);
 			for (size_t i = 0; i < count; ++i) {
 				push_tail((char)dist(gen));
 			}
 		}
 		else if constexpr (std::is_floating_point_v<T>) {
-			std::uniform_real_distribution<T> dist(minVal, maxVal);
+			std::uniform_real_distribution<T> dist(min_val, max_val);
 			for (size_t i = 0; i < count; ++i) {
 				push_tail(dist(gen));
 			}
 		}
 		else {
 			for (size_t i = 0; i < count; ++i) {
-				push_tail(minVal);
+				push_tail(min_val);
 			}
 		}
 	}
@@ -100,35 +105,36 @@ public:
 		while (_size > 0) {
 			pop_head();
 		}
-		copyFrom(other);
+		copy_from(other);
 		return *this;
 	}
 
 	// Добавление элемента в конец
 	void push_tail(const T& value) {
-		Node<T>* newNode = new Node<T>(value);
+		Node<T>* new_node = new Node<T>(value);
 		if (head == nullptr) {
-			head = newNode;
+			head = new_node;
 			head->next = head;
 			head->prev = head;
 		}
 		else {
 			Node<T>* tail = head->prev;
-			tail->next = newNode;
-			newNode->prev = tail;
-			newNode->next = head;
-			head->prev = newNode;
+			tail->next = new_node;
+			new_node->prev = tail;
+			new_node->next = head;
+			head->prev = new_node;
 		}
 		_size++;
 	}
 	// Добавление другого списка в конец
 	void push_tail(const LinkedList& other) {
-		if (other.head == nullptr) return;
-		Node<T>* otherCurrent = other.head;
-		do {
-			push_tail(otherCurrent->data);
-			otherCurrent = otherCurrent->next;
-		} while (otherCurrent != other.head);
+		// Размер запоминаем заранее, чтобы работало и при добавлении списка самого в себя
+		size_t count = other._size;
+		Node<T>* other_current = other.head;
+		for (size_t i = 0; i < count; ++i) {
+			push_tail(other_current->data);
+			other_current = other_current->next;
+		}
 	}
 
 	// Добавление элемента в начало
@@ -140,11 +146,12 @@ public:
 	// Добавление другого списка в начало
 	void push_head(const LinkedList& other) {
 		if (other.head == nullptr) return;
-		Node<T>* otherCurrent = other.head->prev;
-		do {
-			push_head(otherCurrent->data);
-			otherCurrent = otherCurrent->prev;
-		} while (otherCurrent != other.head->prev);
+		size_t count = other._size;
+		Node<T>* other_current = other.head->prev;
+		for (size_t i = 0; i < count; ++i) {
+			push_head(other_current->data);
+			other_current = other_current->prev;
+		}
 	}
 
 	// Удаление элемента из начала
@@ -158,35 +165,13 @@ public:
 		}
 		else {
 			Node<T>* tail = head->prev;
-			Node<T>* newHead = head->next;
+			Node<T>* new_head = head->next;
 
-			tail->next = newHead;
-			newHead->prev = tail;
-
-			delete head;
-			head = newHead;
-		}
-		_size--;
-	}
-
-	// Удаление элемента из начала
-	void pop_head() {
-		if (head == nullptr) {
-			throw std::out_of_range("List is empty");
-		}
-		if (_size == 1) {
-			delete head;
-			head = nullptr;
-		}
-		else {
-			Node<T>* tail = head->prev;
-			Node<T>* newHead = head->next;
-
-			tail->next = newHead;
-			newHead->prev = tail;
+			tail->next = new_head;
+			new_head->prev = tail;
 
 			delete head;
-			head = newHead;
+			head = new_head;
 		}
 		_size--;
 	}
@@ -202,14 +187,96 @@ public:
 		}
 		else {
 			Node<T>* tail = head->prev;
-			Node<T>* newTail = tail->prev;
+			Node<T>* new_tail = tail->prev;
 
-			newTail->next = head;
-			head->prev = newTail;
+			new_tail->next = head;
+			head->prev = new_tail;
 
 			delete tail;
 		}
 		_size--;
 	}
 
+	// Удаление всех элементов, равных переданному значению
+	void delete_node(const T& value) {
+		if (head == nullptr) {
+			return;
+		}
+
+		Node<T>* current = head;
+		size_t original_size = _size;
+
+		for (size_t i = 0; i < original_size; ++i) {
+			Node<T>* next_node = current->next;
+
+			if (current->data == value) {
+				if (_size == 1) {
+					delete head;
+					head = nullptr;
+					_size = 0;
+					return;
+				}
+				else {
+					if (current == head) {
+						head = current->next;
+					}
+					current->prev->next = current->next;
+					current->next->prev = current->prev;
+					delete current;
+					_size--;
+				}
+			}
+			current = next_node;
+		}
+	}
+
+	// Для чтения и записи
+	T& operator[](size_t index) {
+		if (head == nullptr) {
+			throw std::out_of_range("List is empty");
+		}
+		size_t actual_index = index % _size;
+		Node<T>* current = head;
+		for (size_t i = 0; i < actual_index; ++i) {
+			current = current->next;
+		}
+		return current->data;
+	}
+
+	// Только для чтения (константная версия)
+	const T& operator[](size_t index) const {
+		if (head == nullptr) {
+			throw std::out_of_range("List is empty");
+		}
+		size_t actual_index = index % _size;
+		Node<T>* current = head;
+		for (size_t i = 0; i < actual_index; ++i) {
+			current = current->next;
+		}
+		return current->data;
+	}
+
+	// Вывод списка в поток
+	friend std::ostream& operator<<(std::ostream& os, const LinkedList& list) {
+		os << "[ ";
+		if (list.head != nullptr) {
+			Node<T>* current = list.head;
+			do {
+				os << current->data << " ";
+				current = current->next;
+			} while (current != list.head);
+		}
+		os << "]";
+		return os;
+	}
+
+	// Количество элементов в списке
+	size_t size() const {
+		return _size;
+	}
+
+	// Проверка, пуст ли список
+	bool empty() const {
+		return _size == 0;
+	}
 };
