@@ -285,7 +285,7 @@ template <typename T>
 void reverse_list(LinkedList<T>& list) {
 	LinkedList<T> reversed;
 	while (!list.empty()) {
-		reversed.push_head(list[0]);
+		reversed.push_head(list[0])
 		list.pop_head();
 	}
 	list = reversed;
